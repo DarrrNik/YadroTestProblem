@@ -21,16 +21,10 @@ int main(int argc, char* argv[]) {
     }
 
     if (!IsFileCorrect(argv[1]))
-        return 3;
-
-
-    std::ifstream fin(argv[1]); 
-    if (!fin) {
-        std::cout << "File is not found.\n";
-        fin.close();
         return 2;
-    }
     
+    std::ifstream fin(argv[1]);
+
     int tablesNumber = 0;
     fin >> tablesNumber;
     std::vector<Table> tables(tablesNumber);
@@ -65,11 +59,13 @@ int main(int argc, char* argv[]) {
         EventProcessings[(int)inEvent - 1](eventTime, clients, name, tableNum, tables);
     }
 
-    for (const auto& cl : clients) {
-        WriteOutput(end, OutputEvent::CLIENT_LEFT, cl.first, cl.second, ErrorMessages::DEFAULT);
-        tables[cl.second - 1].clientLeftAt(end);
-        clients.erase(cl.first);
+    for (auto itcl = clients.begin(); itcl != clients.end();) {
+        WriteOutput(end, OutputEvent::CLIENT_LEFT, itcl->first, itcl->second, ErrorMessages::DEFAULT);
+        if (itcl->second) 
+            tables[itcl->second - 1].clientLeftAt(end);
+        itcl = clients.erase(itcl);
     }
+
     sout << end << std::endl;
     for (const Table& t : tables) {
         sout << t << std::endl;
