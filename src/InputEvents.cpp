@@ -26,12 +26,17 @@ void InputClientSat(WorkingTime& time, std::map<std::string, int>& clients, cons
 }
 
 void InputClientWaiting(WorkingTime& time, std::map<std::string, int>& clients, const std::string& name, int tableNum, std::vector<Table>& tables) {
+    if (clients.find(name) == clients.end()){
+        WriteOutput(time, OutputEvent::ERROR, name, tableNum, ErrorMessages::CLIENT_UNKNOWN);
+        return;
+    }
     if (IsThereFreeTable(tables)) {
         WriteOutput(time, OutputEvent::ERROR, name, tableNum, ErrorMessages::CANT_WAIT);
         return;
     }
     if (clientsQu.size() > tables.size()) {
         WriteOutput(time, OutputEvent::CLIENT_LEFT, name, tableNum, ErrorMessages::DEFAULT);
+        clients.erase(name);
         return;
     }
     clientsQu.push(name);
