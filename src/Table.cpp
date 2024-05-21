@@ -13,7 +13,7 @@ void Table::clientLeftAt(const WorkingTime& t) {
     busy = false;
     WorkingTime diff = {(short)(t.hours - satAtTime.hours - (int)(t.minutes < satAtTime.minutes)), (short)((t.minutes - satAtTime.minutes + 60) % 60)};
     workTime = workTime + diff;
-    income += hourCost + hourCost * diff.hours;
+    income += ((diff.minutes) ? (hourCost) : (0)) + hourCost * diff.hours;
 }
 
 void Table::clientSatAt(const WorkingTime& t) {
