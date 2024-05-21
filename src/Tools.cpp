@@ -71,7 +71,11 @@ bool IsName(std::string& s) {
 
 bool IsFileCorrect(char* fileName) {
     std::ifstream fin(fileName);
-
+    if (!fin) {
+        std::cout << "File is not found.\n";
+        fin.close();
+        return false;
+    }
     const int LINE_SIZE = 1024;
     char line[LINE_SIZE];    
     bool isThereEmpty = false;
